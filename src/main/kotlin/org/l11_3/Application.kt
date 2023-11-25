@@ -1,6 +1,8 @@
 package org.l11_3
 
+import com.typesafe.config.ConfigFactory
 import io.ktor.server.application.*
+import io.ktor.server.config.*
 import org.l11_3.plugins.*
 
 fun main(args: Array<String>) {
@@ -8,7 +10,8 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    val values = getValues()
     configureSerialization()
-    configureSecurity()
+    configureSecurity(values)
     configureRouting()
 }

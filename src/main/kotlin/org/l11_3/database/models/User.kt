@@ -20,3 +20,8 @@ data class UserCheck(
     val login: String,
     val password: Int
 )
+
+data class UserSecurity(
+    val id: Int,
+    val password: Int
+)

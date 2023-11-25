@@ -1,4 +1,4 @@
-package org.l11_3.responses.enums
+package org.l11_3.responses.values
 
 import io.ktor.http.*
 
@@ -6,13 +6,16 @@ enum class Result(val message: String, val code: HttpStatusCode) {
     OK(
         "OK", HttpStatusCode.OK
     ),
-    Such_User_Already_Exists(
+    SuchUserAlreadyExists(
         "Such user already exists", HttpStatusCode.Conflict
     ),
-    Such_User_Does_Not_Exist(
+    SuchUserDoesNotExist(
         "Such user doesn`t exist", HttpStatusCode.NotFound
     ),
-    Incorrect_Password(
+    IncorrectPassword(
         "Incorrect password", HttpStatusCode.Conflict
+    ),
+    TokenIsNotValidOrExpired(
+        "Token isn`t valid or expired", HttpStatusCode.Conflict
     )
 }

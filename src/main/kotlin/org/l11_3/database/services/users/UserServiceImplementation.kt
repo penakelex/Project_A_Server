@@ -1,18 +1,15 @@
 package org.l11_3.database.services.users
 
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.or
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.l11_3.database.models.UserLogin
 import org.l11_3.database.models.UserRegister
 import org.l11_3.database.services.TableService
 import org.l11_3.database.tables.Users
-import org.l11_3.responses.enums.Result
+import org.l11_3.responses.values.Result
 
 class UserServiceImplementation : TableService(), UserService {
     override suspend fun register(user: UserRegister): Result {
-        if (isUserExists(user)) return Result.Such_User_Already_Exists
+        if (isUserExists(user)) return Result.SuchUserAlreadyExists
         databaseQuery {
             Users.insert {
                 it[phone] = user.phone
@@ -29,9 +26,9 @@ class UserServiceImplementation : TableService(), UserService {
 
     override suspend fun login(user: UserLogin): Result {
         val passwordHash = getUserPassword(phone = user.phone, email = user.email)
-            ?: return Result.Such_User_Does_Not_Exist
+            ?: return Result.SuchUserDoesNotExist
         return if (user.password.hashCode() == passwordHash) Result.OK
-        else Result.Incorrect_Password
+        else Result.IncorrectPassword
     }
 
     override suspend fun isUserExists(user: UserRegister): Boolean = databaseQuery {
@@ -55,5 +52,17 @@ class UserServiceImplementation : TableService(), UserService {
     }.singleOrNull().let {
         if (it == null) return@let null
         return@let it[Users.password]
+    }
+
+    override suspend fun getUserPassword(id: Int): Int? = databaseQuery {
+        Users.select { Users.id.eq(id) }
+    }.singleOrNull().let {
+        if (it == null) return@let null
+        return@let it[Users.password]
+    }
+
+    override suspend fun isTokenValid(id: Int?, password: Int?): Boolean {
+        if (id == null || password == null) return false
+        return password == getUserPassword(id = id)
     }
 }
