@@ -15,4 +15,5 @@ object Users : Table() {
     val `class` = byte("class")
     val events = array<Int>("events", IntegerColumnType())
     val events_participant = array<Int>("events_participant", IntegerColumnType())
+    override val primaryKey = PrimaryKey(Events.id)
 }
