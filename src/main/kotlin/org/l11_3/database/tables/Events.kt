@@ -2,16 +2,20 @@ package org.l11_3.database.tables
 
 import org.jetbrains.exposed.sql.IntegerColumnType
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.TextColumnType
+import org.jetbrains.exposed.sql.UIntegerColumnType
 import org.l11_3.database.extensions.array
 
 object Events : Table() {
-    val id = integer("id").autoIncrement()
-    val organizers = array<Int>("organizers", IntegerColumnType())
+    val id = uinteger("id").autoIncrement()
+    val organizers = array<UInt>("organizers", UIntegerColumnType())
+    val presenters = array<String>("presenters", TextColumnType())
     val name = text("name")
-    val start = long("start")
-    val end = long("end")
+    val start = ulong("start")
+    val end = ulong("end")
     val description = text("description")
-    val picture = binary("picture")
-    val participants = array<Int>("participants", IntegerColumnType())
+    val picture = text("picture")
+    val participants = array<UInt>("participants", UIntegerColumnType())
+        .default(arrayOf())
     override val primaryKey = PrimaryKey(id)
 }

@@ -17,5 +17,11 @@ enum class Result(val message: String, val code: HttpStatusCode) {
     ),
     TokenIsNotValidOrExpired(
         "Token isn`t valid or expired", HttpStatusCode.Conflict
+    ),
+    NoEventWithSuchID(
+        "No event with such ID", HttpStatusCode.NotFound
+    ),
+    UCanNotManageThisEvent(
+        "You can`t manage this event", HttpStatusCode.Forbidden
     )
 }

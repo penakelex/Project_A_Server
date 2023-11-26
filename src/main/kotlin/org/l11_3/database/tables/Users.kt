@@ -13,8 +13,8 @@ object Users : Table() {
     val surname = text("surname")
     val patronymic = text("patronymic")
     val `class` = ubyte("class").nullable()
-    val events = array<UInt>("events", IntegerColumnType()).default(Array(0) { 0.toUInt() })
+    val events = array<UInt>("events", IntegerColumnType()).default(arrayOf())
     val events_participant = array<UInt>("events_participant", IntegerColumnType())
-        .default(Array(0) { 0.toUInt() })
+        .default(arrayOf())
     override val primaryKey = PrimaryKey(Events.id)
 }
