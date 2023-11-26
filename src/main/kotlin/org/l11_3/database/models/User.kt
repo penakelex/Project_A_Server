@@ -1,6 +1,7 @@
 package org.l11_3.database.models
 
 data class UserRegister(
+    val code: Int,
     val phone: String?,
     val email: String?,
     val password: String,
