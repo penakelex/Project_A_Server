@@ -11,7 +11,7 @@ data class UserRegister(
     val name: String,
     val surname: String,
     val patronymic: String,
-    val `class`: Byte?
+    val `class`: UByte?
 )
 
 @Serializable
@@ -19,4 +19,15 @@ data class UserLogin(
     val phone: String?,
     val email: String?,
     val password: String
+)
+
+@Serializable
+data class UserUpdate(
+    val phone: String?,
+    val email: String?,
+    val password: String?,
+    val name: String?,
+    val surname: String?,
+    val patronymic: String?,
+    val `class`: UByte?
 )

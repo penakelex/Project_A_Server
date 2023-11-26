@@ -8,7 +8,7 @@ private const val userID = "userID"
 private const val password = "password"
 private const val ONE_YEAR_IN_MS = 31_536_000_000
 
-fun generateToken(values: JWTValues, id: Long, userPassword: Int): String = JWT
+fun generateToken(values: JWTValues, id: Int, userPassword: Int): String = JWT
     .create()
     .withAudience(values.audience)
     .withIssuer(values.issuer)

@@ -8,7 +8,7 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.config.*
 import io.ktor.server.response.*
 import org.koin.ktor.ext.inject
-import org.l11_3.database.Service
+import org.l11_3.database.services.Service
 import org.l11_3.responses.values.Result
 import org.l11_3.session.JWTValues
 import org.l11_3.session.getAlgorithm
@@ -28,7 +28,7 @@ fun Application.configureSecurity(values: JWTValues) {
             )
             validate { jwtCredential ->
                 val isTokenValid = service.userService.isTokenValid(
-                    id = jwtCredential.payload.getClaim(getUserIDString())?.asInt(),
+                    id = jwtCredential.payload.getClaim(getUserIDString()).asInt()?.toUInt(),
                     password = jwtCredential.payload.getClaim(getUserIDString())?.asInt()
                 )
                 val isNotExpired = (jwtCredential.expiresAt?.time ?: Long.MIN_VALUE) > System.currentTimeMillis()

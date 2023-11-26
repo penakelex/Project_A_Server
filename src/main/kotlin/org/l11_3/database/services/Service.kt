@@ -1,4 +1,4 @@
-package org.l11_3.database
+package org.l11_3.database.services
 
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils

@@ -2,7 +2,7 @@ package org.l11_3.di
 
 import org.jetbrains.exposed.sql.Database
 import org.koin.dsl.module
-import org.l11_3.database.Service
+import org.l11_3.database.services.Service
 import org.l11_3.database.services.users.UserServiceImplementation
 import org.l11_3.routs.user.UserController
 import org.l11_3.routs.user.UserControllerImplementation
