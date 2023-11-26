@@ -4,6 +4,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import org.l11_3.database.Service
+import org.l11_3.database.models.UserLogin
 import org.l11_3.database.models.UserRegister
 
 class UserControllerImplementation(private val service: Service) : UserController {
@@ -15,7 +16,6 @@ class UserControllerImplementation(private val service: Service) : UserControlle
     }
 
     override suspend fun login(call: ApplicationCall) {
-
+        call.respond(service.userService.login(user = call.receive<UserLogin>()))
     }
-
 }

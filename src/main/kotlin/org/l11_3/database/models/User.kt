@@ -1,7 +1,10 @@
 package org.l11_3.database.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class UserRegister(
-    val code: Int,
+    val code: String,
     val phone: String?,
     val email: String?,
     val password: String,
@@ -11,18 +14,9 @@ data class UserRegister(
     val `class`: Byte?
 )
 
+@Serializable
 data class UserLogin(
     val phone: String?,
     val email: String?,
     val password: String
-)
-
-data class UserCheck(
-    val login: String,
-    val password: Int
-)
-
-data class UserSecurity(
-    val id: Int,
-    val password: Int
 )

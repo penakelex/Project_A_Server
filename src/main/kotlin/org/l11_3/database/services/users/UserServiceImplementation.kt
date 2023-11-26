@@ -41,15 +41,15 @@ class UserServiceImplementation : TableService(), UserService {
                         .and(Users.patronymic.eq(user.patronymic))
                         .and(Users.`class`.eq(user.`class`))
                 )
-        }
-    }.singleOrNull() != null
+        }.singleOrNull()
+    } != null
 
     override suspend fun getUserPassword(phone: String?, email: String?): Int? = databaseQuery {
         Users.select {
             if (phone == null) Users.email.eq(email)
             else Users.phone.eq(phone)
-        }
-    }.singleOrNull().let {
+        }.singleOrNull()
+    }.let {
         if (it == null) return@let null
         return@let it[Users.password]
     }

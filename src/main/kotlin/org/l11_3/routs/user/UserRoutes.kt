@@ -1,7 +1,9 @@
 package org.l11_3.routs.user
 
+import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
-fun Route.userRoutes() {
-
+fun Route.user(userController: UserController) {
+    post("user/register") { userController.register(call) }
+    post("user/login") { userController.login(call) }
 }
