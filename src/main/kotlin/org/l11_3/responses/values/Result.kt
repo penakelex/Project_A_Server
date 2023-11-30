@@ -50,11 +50,5 @@ enum class Result(val message: String, val code: HttpStatusCode) {
     ),
     UAlreadyOrganizerOfThisEvent(
         "You already organizer of this event", HttpStatusCode.Conflict
-    ),
-    UserDidNotRegisteredOnEvent(
-        "User didn't registered on event", HttpStatusCode.Forbidden
-    ),
-    NoSuchTypeOfQRCode(
-        "No such type of QR code", HttpStatusCode.NotFound
     )
 }

@@ -4,14 +4,11 @@ import org.jetbrains.exposed.sql.*
 import org.l11_3.database.extensions.minus
 import org.l11_3.database.models.*
 import org.l11_3.database.services.TableService
-import org.l11_3.database.states.EventState
 import org.l11_3.database.tables.Users
 import org.l11_3.responses.values.Result
 
 class UsersServiceImplementation : TableService(), UsersService {
-    override suspend fun register(
-        user: UserRegister
-    ): Pair<Result, UserSecurity?> {
+    override suspend fun register(user: UserRegister): Pair<Result, UserSecurity?> {
         if (isUserExists(user)) return Result.SuchUserAlreadyExists to null
         val userSecurity = databaseQuery {
             Users.insert {
@@ -60,9 +57,7 @@ class UsersServiceImplementation : TableService(), UsersService {
         return Result.OK
     }
 
-    override suspend fun updateEmail(
-        newEmail: String, id: UInt
-    ): Result = databaseQuery {
+    override suspend fun updateEmail(newEmail: String, id: UInt): Result = databaseQuery {
         val lastEmail = Users.select { Users.id.eq(id) }.singleOrNull().let {
             if (it == null) return@let null
             it[Users.email]
@@ -75,9 +70,7 @@ class UsersServiceImplementation : TableService(), UsersService {
     }
 
 
-    override suspend fun updatePassword(
-        newPassword: String, id: UInt, password: Int
-    ): Result {
+    override suspend fun updatePassword(newPassword: String, id: UInt, password: Int): Result {
         if (password == newPassword.hashCode()) return Result.NewPasswordSameAsLast
         return databaseQuery {
             val passwordDatabase = Users.select { Users.id.eq(id) }.singleOrNull().let {
@@ -118,9 +111,7 @@ class UsersServiceImplementation : TableService(), UsersService {
         return@databaseQuery Result.OK
     }
 
-    override suspend fun deleteEventAsBobblehead(
-        userID: UInt, eventID: UInt
-    ): Result =
+    override suspend fun deleteEventAsBobblehead(userID: UInt, eventID: UInt): Result =
         databaseQuery {
             val events = Users.select { Users.id.eq(userID) }.singleOrNull().let {
                 if (it == null) return@let null
@@ -161,97 +152,36 @@ class UsersServiceImplementation : TableService(), UsersService {
         Result.OK
     }
 
-    override suspend fun addEventAsBobblehead(
-        userID: UInt, eventID: UInt
-    ): Result = databaseQuery {
-        val events = Users.select {
-            Users.id.eq(userID)
-        }.singleOrNull().let {
-            if (it == null) return@let null
-            it[Users.events_bobblehead]
-        } ?: return@databaseQuery Result.SuchUserDoesNotExist
-        Users.update({ Users.id.eq(userID) }) {
-            it[events_bobblehead] = events.plus(eventID.toInt())
+    override suspend fun addEventAsBobblehead(userID: UInt, eventID: UInt): Result {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getEventsIDsAsOrganizer(userID: UInt): Pair<Result, List<UInt>?> =
+        databaseQuery { Users.select { Users.id.eq(userID) }.singleOrNull() }.let {
+            if (it == null) Result.SuchUserDoesNotExist to null
+            else Result.OK to it[Users.events].map { eventID -> eventID.toUInt() }
         }
-        return@databaseQuery Result.OK
-    }
-
-    override suspend fun getEventsIDsAsOrganizer(
-        userID: UInt
-    ): Pair<Result, List<UInt>?> = databaseQuery {
-        Users.select { Users.id.eq(userID) }.singleOrNull()
-    }.let {
-        if (it == null) Result.SuchUserDoesNotExist to null
-        else Result.OK to it[Users.events].map { eventID -> eventID.toUInt() }
-    }
 
 
-    override suspend fun getEventsIDsAsParticipant(
-        userID: UInt
-    ): Pair<Result, List<UInt>?> = databaseQuery {
-        Users.select { Users.id.eq(userID) }.singleOrNull()
-    }.let {
-        if (it == null) Result.SuchUserDoesNotExist to null
-        else Result.OK to it[Users.events_participant].map { eventID -> eventID.toUInt() }
-    }
+    override suspend fun getEventsIDsAsParticipant(userID: UInt): Pair<Result, List<UInt>?> =
+        databaseQuery { Users.select { Users.id.eq(userID) }.singleOrNull() }.let {
+            if (it == null) Result.SuchUserDoesNotExist to null
+            else Result.OK to it[Users.events_participant].map { eventID -> eventID.toUInt() }
+        }
 
-    override suspend fun getUserInformation(
-        userID: UInt
-    ): Pair<Result, User?> = databaseQuery {
-        Users.select { Users.id.eq(userID) }.singleOrNull()
-    }.let {
-        if (it == null) return@let Result.SuchUserDoesNotExist to null
-        Result.OK to User(
-            phone = it[Users.phone],
-            email = it[Users.email],
-            name = it[Users.name],
-            surname = it[Users.surname],
-            patronymic = it[Users.patronymic],
-            status = it[Users.status]
-        )
-    }
-
-    override suspend fun checkUserIsRegisteredOnEvent(
-        userID: UInt, eventID: UInt, eventState: EventState
-    ): Result {
-        val events = databaseQuery {
-            Users.select { Users.id.eq(userID) }.singleOrNull()
-        }.let {
-            if (it == null) return@let null
-            when(eventState) {
-                EventState.Organizer -> it[Users.events]
-                EventState.Participant -> it[Users.events_participant]
-                else -> it[Users.events_bobblehead]
-            }
-        } ?: return Result.SuchUserDoesNotExist
-        if (eventID.toInt() !in events) return Result.UserDidNotRegisteredOnEvent
-        return Result.OK
-    }
-
-    override suspend fun checkUserData(
-        userID: UInt,
-        name: String,
-        surname: String,
-        patronymic: String,
-        status: String
-    ): Result {
-        val userData = databaseQuery { Users.select { Users.id.eq(userID) }.singleOrNull() }.let {
-            if (it == null) return@let null
-            User(
-                phone = null,
-                email = null,
+    override suspend fun getUserInformation(userID: UInt): Pair<Result, User?> =
+        databaseQuery { Users.select { Users.id.eq(userID) }.singleOrNull() }.let {
+            if (it == null) return@let Result.SuchUserDoesNotExist to null
+            Result.OK to User(
+                phone = it[Users.phone],
+                email = it[Users.email],
                 name = it[Users.name],
                 surname = it[Users.surname],
                 patronymic = it[Users.patronymic],
                 status = it[Users.status]
             )
-        } ?: return Result.SuchUserDoesNotExist
-        if (
-            name == userData.name && surname == userData.surname
-            && patronymic == userData.patronymic && status == userData.status
-        ) return Result.OK
-        return Result.SuchUserDoesNotExist
-    }
+        }
+
 
     override suspend fun quit(userID: UInt, password: Int): Result {
         val userDatabase = databaseQuery {
@@ -269,9 +199,7 @@ class UsersServiceImplementation : TableService(), UsersService {
         return Result.OK
     }
 
-    override suspend fun isUserExists(
-        user: UserRegister
-    ): Boolean = databaseQuery {
+    override suspend fun isUserExists(user: UserRegister): Boolean = databaseQuery {
         Users.select {
             (if (user.phone == null) Users.email.eq(user.email)
             else Users.phone.eq(user.phone))

@@ -7,10 +7,10 @@ import org.koin.dsl.module
 import org.l11_3.database.services.Service
 import org.l11_3.database.services.events.EventsServiceImplementation
 import org.l11_3.database.services.users.UsersServiceImplementation
-import org.l11_3.routes.events.EventsController
-import org.l11_3.routes.events.EventsControllerImplementation
-import org.l11_3.routes.user.UserController
-import org.l11_3.routes.user.UserControllerImplementation
+import org.l11_3.routs.events.EventsController
+import org.l11_3.routs.events.EventsControllerImplementation
+import org.l11_3.routs.user.UserController
+import org.l11_3.routs.user.UserControllerImplementation
 import org.l11_3.session.JWTValues
 
 val mainModule = module {

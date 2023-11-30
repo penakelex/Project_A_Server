@@ -1,7 +1,6 @@
 package org.l11_3.database.services.users
 
 import org.l11_3.database.models.*
-import org.l11_3.database.states.EventState
 import org.l11_3.responses.values.Result
 
 interface UsersService {
@@ -19,10 +18,10 @@ interface UsersService {
     suspend fun getEventsIDsAsOrganizer(userID: UInt): Pair<Result, List<UInt>?>
     suspend fun getEventsIDsAsParticipant(userID: UInt): Pair<Result, List<UInt>?>
     suspend fun getUserInformation(userID: UInt): Pair<Result, User?>
-    suspend fun checkUserIsRegisteredOnEvent(userID: UInt, eventID: UInt, eventState: EventState): Result
-    suspend fun checkUserData(userID: UInt, name: String, surname: String, patronymic: String, status: String): Result
     suspend fun quit(userID: UInt, password: Int): Result
     suspend fun getUserSecurity(phone: String?, email: String?): UserSecurity?
     suspend fun isUserExists(user: UserRegister): Boolean
     suspend fun isTokenValid(id: UInt?, password: Int?): Boolean
+
+
 }

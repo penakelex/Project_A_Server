@@ -39,13 +39,6 @@ data class User(
     val status: String
 )
 
-@Serializable
-data class Code(
-    val type: String,
-    val eventID: UInt?,
-    val eventState: String?
-)
-
 data class UserQuit(
     val password: Int,
     val entered: Boolean
