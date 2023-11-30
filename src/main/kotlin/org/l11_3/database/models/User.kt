@@ -4,14 +4,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserRegister(
-    val code: String,
     val phone: String?,
     val email: String?,
     val password: String,
     val name: String,
     val surname: String,
     val patronymic: String,
-    val `class`: UByte?
+    val status: String
 )
 
 @Serializable
@@ -24,10 +23,35 @@ data class UserLogin(
 @Serializable
 data class UserUpdate(
     val phone: String?,
-    val email: String?,
-    val password: String?,
     val name: String?,
     val surname: String?,
     val patronymic: String?,
-    val `class`: UByte?
+    val status: String?
+)
+
+@Serializable
+data class User(
+    val phone: String?,
+    val email: String?,
+    val name: String,
+    val surname: String,
+    val patronymic: String,
+    val status: String
+)
+
+@Serializable
+data class Code(
+    val type: String,
+    val eventID: UInt?,
+    val eventState: String?
+)
+
+data class UserQuit(
+    val password: Int,
+    val entered: Boolean
+)
+
+data class UserSecurity(
+    val id: UInt,
+    val password: Int
 )

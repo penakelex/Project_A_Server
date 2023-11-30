@@ -1,19 +1,23 @@
 package org.l11_3.database.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class EventCreate(
     val organizers: Array<UInt>,
-    val presenters: Array<String>,
     val name: String,
     val start: ULong,
     val end: ULong,
     val description: String,
-    val picture: String, //TODO: Сделать нормальную картинку
+    val picture: String,
     val participants: Array<UInt>?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
+
         other as EventCreate
+
         if (!organizers.contentEquals(other.organizers)) return false
         if (name != other.name) return false
         if (start != other.start) return false
@@ -40,16 +44,15 @@ data class EventCreate(
     }
 }
 
+@Serializable
 data class EventEdit(
-    val userID: UInt,
     val id: UInt,
     val organizers: Array<UInt>?,
-    val presenters: Array<String>?,
     val name: String?,
     val start: ULong?,
     val end: ULong?,
     val description: String?,
-    val picture: String?, //TODO: картинка...
+    val picture: String?,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -57,16 +60,11 @@ data class EventEdit(
 
         other as EventEdit
 
-        if (userID != other.userID) return false
         if (id != other.id) return false
         if (organizers != null) {
             if (other.organizers == null) return false
             if (!organizers.contentEquals(other.organizers)) return false
         } else if (other.organizers != null) return false
-        if (presenters != null) {
-            if (other.presenters == null) return false
-            if (!presenters.contentEquals(other.presenters)) return false
-        } else if (other.presenters != null) return false
         if (name != other.name) return false
         if (start != other.start) return false
         if (end != other.end) return false
@@ -75,10 +73,8 @@ data class EventEdit(
     }
 
     override fun hashCode(): Int {
-        var result = userID.hashCode()
-        result = 31 * result + id.hashCode()
+        var result = id.hashCode()
         result = 31 * result + (organizers?.contentHashCode() ?: 0)
-        result = 31 * result + (presenters?.contentHashCode() ?: 0)
         result = 31 * result + (name?.hashCode() ?: 0)
         result = 31 * result + (start?.hashCode() ?: 0)
         result = 31 * result + (end?.hashCode() ?: 0)
@@ -90,7 +86,7 @@ data class EventEdit(
 
 data class EventToDelete(
     val organizers: Array<UInt>,
-    val presenters: Array<String>,
+    val bobbleheads: Array<UInt>,
     val participants: Array<UInt>
 ) {
     override fun equals(other: Any?): Boolean {
@@ -100,15 +96,48 @@ data class EventToDelete(
         other as EventToDelete
 
         if (!organizers.contentEquals(other.organizers)) return false
-        if (!presenters.contentEquals(other.presenters)) return false
+        if (!bobbleheads.contentEquals(other.bobbleheads)) return false
         return participants.contentEquals(other.participants)
     }
 
     override fun hashCode(): Int {
         var result = organizers.contentHashCode()
-        result = 31 * result + presenters.contentHashCode()
+        result = 31 * result + bobbleheads.contentHashCode()
         result = 31 * result + participants.contentHashCode()
         return result
     }
+}
 
+@Serializable
+data class Events(
+    val organizers: Array<UInt>,
+    val name: String,
+    val start: ULong,
+    val end: ULong,
+    val description: String,
+    val picture: String
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Events
+
+        if (!organizers.contentEquals(other.organizers)) return false
+        if (name != other.name) return false
+        if (start != other.start) return false
+        if (end != other.end) return false
+        if (description != other.description) return false
+        return picture == other.picture
+    }
+
+    override fun hashCode(): Int {
+        var result = organizers.contentHashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + start.hashCode()
+        result = 31 * result + end.hashCode()
+        result = 31 * result + description.hashCode()
+        result = 31 * result + picture.hashCode()
+        return result
+    }
 }

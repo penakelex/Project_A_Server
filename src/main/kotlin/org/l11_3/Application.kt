@@ -8,9 +8,8 @@ fun main(args: Array<String>) =
 
 
 fun Application.module() {
-    val values = getValues()
     configureDependencyInjection()
     configureSerialization()
-    configureSecurity(values)
+    configureSecurity()
     configureRouting()
 }

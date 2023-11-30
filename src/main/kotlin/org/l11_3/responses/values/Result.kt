@@ -23,5 +23,38 @@ enum class Result(val message: String, val code: HttpStatusCode) {
     ),
     UCanNotManageThisEvent(
         "You can`t manage this event", HttpStatusCode.Forbidden
+    ),
+    UAlreadyParticipantOfTheEvent(
+        "You already participant of the event", HttpStatusCode.Conflict
+    ),
+    UAreNotParticipantOfThisEvent(
+        "You aren`t participant of this event", HttpStatusCode.NotFound
+    ),
+    UWasNotOrganizerOfThisEvent(
+        "You wasn`t organizer of this event", HttpStatusCode.NotFound
+    ),
+    UWasNotParticipantOfThisEvent(
+        "You wasn`t participant of this event", HttpStatusCode.NotFound
+    ),
+    UCanNotManageThisUser(
+        "You can`t manage this user", HttpStatusCode.Forbidden
+    ),
+    UAlreadyQuited(
+        "You already quited", HttpStatusCode.Conflict
+    ),
+    NewPasswordSameAsLast(
+        "New password same as last", HttpStatusCode.Found
+    ),
+    NewEmailSameAsLast(
+        "New email same as last", HttpStatusCode.Found
+    ),
+    UAlreadyOrganizerOfThisEvent(
+        "You already organizer of this event", HttpStatusCode.Conflict
+    ),
+    UserDidNotRegisteredOnEvent(
+        "User didn't registered on event", HttpStatusCode.Forbidden
+    ),
+    NoSuchTypeOfQRCode(
+        "No such type of QR code", HttpStatusCode.NotFound
     )
 }
