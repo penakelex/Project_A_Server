@@ -109,6 +109,16 @@ class UserControllerImplementation(private val service: Service, private val val
         )
     }
 
+    override suspend fun addEventAsBobblehead(call: ApplicationCall) {
+        call.respond(
+            service.usersService.addEventAsBobblehead(
+                userID = call.principal<JWTPrincipal>()!!
+                    .payload.getClaim(getUserIDString()).asInt().toUInt(),
+                eventID = call.receive<UInt>()
+            ).toResultResponse()
+        )
+    }
+
     override suspend fun deleteEventAsOrganizer(call: ApplicationCall) {
         call.respond(
             service.usersService.deleteEventAsOrganizer(
@@ -126,6 +136,16 @@ class UserControllerImplementation(private val service: Service, private val val
                     .payload.getClaim(getUserIDString()).asInt().toUInt(),
                 eventID = call.receive<UInt>()
             ).toResultResponse()
+        )
+    }
+
+    override suspend fun deleteEventAsBobblehead(call: ApplicationCall) {
+        call.respond(
+            service.usersService.deleteEventAsBobblehead(
+                userID = call.principal<JWTPrincipal>()!!
+                    .payload.getClaim(getUserIDString()).asInt().toUInt(),
+                eventID = call.receive<UInt>()
+            )
         )
     }
 

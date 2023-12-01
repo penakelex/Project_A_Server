@@ -40,6 +40,14 @@ UserUpdate(
     val status: String?
 )
 ```
++ Code
+```kotlin
+Code(
+    val type: String,
+    val eventID: UInt?,
+    val eventState: String?
+)
+```
 ### Мероприятия
 + EventCreate
 ```kotlin

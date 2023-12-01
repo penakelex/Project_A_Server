@@ -4,6 +4,7 @@ import org.jetbrains.exposed.sql.*
 import org.l11_3.database.extensions.minus
 import org.l11_3.database.models.*
 import org.l11_3.database.services.TableService
+import org.l11_3.database.states.EventState
 import org.l11_3.database.tables.Users
 import org.l11_3.responses.values.Result
 
@@ -152,8 +153,16 @@ class UsersServiceImplementation : TableService(), UsersService {
         Result.OK
     }
 
-    override suspend fun addEventAsBobblehead(userID: UInt, eventID: UInt): Result {
-        TODO("Not yet implemented")
+    override suspend fun addEventAsBobblehead(userID: UInt, eventID: UInt): Result = databaseQuery {
+        val events = Users.select { Users.id.eq(userID) }.singleOrNull().let {
+            if (it == null) return@let null
+            it[Users.events_participant]
+        } ?: return@databaseQuery Result.SuchUserDoesNotExist
+        if (eventID.toInt() in events) return@databaseQuery Result.UAlreadyParticipantOfTheEvent
+        Users.update({ Users.id.eq(userID) }) {
+            it[events_participant] = events.plus(eventID.toInt())
+        }
+        Result.OK
     }
 
     override suspend fun getEventsIDsAsOrganizer(userID: UInt): Pair<Result, List<UInt>?> =
@@ -181,6 +190,49 @@ class UsersServiceImplementation : TableService(), UsersService {
                 status = it[Users.status]
             )
         }
+
+    override suspend fun checkUserIsRegisteredOnEvent(
+        userID: UInt, eventID: UInt, eventState: EventState
+    ): Result {
+        val events = databaseQuery {
+            Users.select { Users.id.eq(userID) }.singleOrNull()
+        }.let {
+            if (it == null) return@let null
+            when (eventState) {
+                EventState.Participant -> it[Users.events_participant]
+                EventState.Organizer -> it[Users.events]
+                else -> it[Users.events_bobblehead]
+            }
+        } ?: return Result.SuchUserDoesNotExist
+        if (eventID.toInt() !in events) return Result.UserDidNotRegisteredOnEvent
+        return Result.OK
+    }
+
+    override suspend fun checkUserData(
+        userID: UInt,
+        name: String,
+        surname: String,
+        patronymic: String,
+        status: String
+    ): Result {
+        val userData = databaseQuery {
+            Users.select { Users.id.eq(userID) }.singleOrNull()
+        }.let {
+            if (it == null) return@let null
+            User(
+                phone = it[Users.phone],
+                email = it[Users.email],
+                name = it[Users.name],
+                surname = it[Users.surname],
+                patronymic = it[Users.patronymic],
+                status = it[Users.status]
+            )
+        } ?: return Result.SuchUserDoesNotExist
+        if (userData.name == name && userData.surname == surname
+            && userData.patronymic == patronymic && userData.status == status
+        ) return Result.OK
+        return Result.SuchUserDoesNotExist
+    }
 
 
     override suspend fun quit(userID: UInt, password: Int): Result {
