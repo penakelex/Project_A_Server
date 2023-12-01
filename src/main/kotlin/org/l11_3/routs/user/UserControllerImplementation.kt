@@ -18,9 +18,7 @@ import org.l11_3.session.getPasswordString
 import org.l11_3.session.getUserIDString
 
 class UserControllerImplementation(private val service: Service, private val values: JWTValues) : UserController {
-    override suspend fun sendVerificationCode(call: ApplicationCall) {
-        //TODO: почта
-    }
+
 
     override suspend fun register(call: ApplicationCall) {
         val (registerResult, userSecurity) = service.usersService
