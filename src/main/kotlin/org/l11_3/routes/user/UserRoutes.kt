@@ -9,6 +9,8 @@ fun Route.user(userController: UserController) {
 
     post("user/login") { userController.login(call) }
 
+    post("user/code/validate") { userController.validateCode(call) }
+
     authenticate {
         post("user/edit") { userController.editData(call) }
 
@@ -17,8 +19,6 @@ fun Route.user(userController: UserController) {
         post("user/edit/email") { userController.updateEmail(call) }
 
         post("user/code/generate") { userController.generateCode(call) }
-
-        post("user/code/validate") { userController.validateCode(call) }
 
         post("user/event/addAsOrganizer") {
             userController.addEventAsOrganizer(call)
